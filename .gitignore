@@ -1,0 +1,11 @@
+.DS_Store
+.idea
+*.log
+tmp/
+input/bert-base-uncased/*
+models/*
+
+*.py[cod]
+*.egg
+build
+htmlcov
