@@ -7,5 +7,6 @@ models/*
 
 *.py[cod]
 *.egg
+*.ipynb_checkpoints/*
 build
 htmlcov

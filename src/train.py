@@ -12,7 +12,7 @@ from model import BERTBaseUncased
 
 
 def run():
-    dfx = pd.read_csv(config.TRAINING_FILE, nrows=50).dropna().reset_index(drop=True)
+    dfx = pd.read_csv(config.TRAINING_FILE).dropna().reset_index(drop=True)
 
     df_train, df_valid = model_selection.train_test_split(
         dfx,
@@ -48,7 +48,7 @@ def run():
         num_workers=1
     )
 
-    device = torch.device("cpu")
+    device = torch.device("cuda") # add cpu if working on non-nvidia device
     model = BERTBaseUncased()
     model.to(device)
 
