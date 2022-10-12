@@ -2,8 +2,8 @@
 .idea
 *.log
 tmp/
-input/bert-base-uncased/*
-models/*
+app/input/bert-base-uncased/*
+app/models/*
 
 *.py[cod]
 *.egg
