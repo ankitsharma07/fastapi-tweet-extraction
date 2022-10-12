@@ -8,15 +8,15 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from tqdm import tqdm
 
-from models.model_cfg import __version__ as model_version
+__version__ = "0.1.0"
 
 app = FastAPI()
 
 
 MAX_LEN = 128
 VALID_BATCH_SIZE = 1
-BERT_PATH = "./input/bert-base-uncased"
-MODEL_PATH = "./models/model.bin"
+BERT_PATH = "/code/app/input/bert-base-uncased"
+MODEL_PATH = "/code/app/models/model.bin"
 TOKENIZER = tokenizers.BertWordPieceTokenizer(
     f"{BERT_PATH}/vocab.txt", lowercase=True
 )
@@ -313,7 +313,7 @@ class SentimentExtract(BaseModel):
 
 @app.get("/")
 def home():
-    return {"health_check": "OK", "model_version": model_version}
+    return {"health_check": "OK", "model_version": __version__}
 
 
 @app.post("/predict")
