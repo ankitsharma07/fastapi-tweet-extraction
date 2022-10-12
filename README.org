@@ -1,0 +1,117 @@
+* Objective
+- Given a ~tweet~ and a ~sentiment~, we have to predict the word or phrase that
+  exemplifies the provided sentiment.
+- This data is from a kaggle competition: [[https://www.kaggle.com/competitions/tweet-sentiment-extraction][Tweet Sentiment Extraction]]
+- Data format
+  + Train data has:
+    - text: text of the tweet
+    - sentiment: the general sentiment of the tweet
+    - selected_text: the text that supports the tweet's sentiment
+
+* FastAPI
+- Used [[https://fastapi.tiangolo.com/][FastAPI]] to create an API endpoint ~/predict~ which takes:
+  + *tweet*: string
+  + *sentiment*: string
+- And Outputs
+  + *original tweet*
+  + *original sentiment*
+  + *phrase that supports the sentiment*
+- There are three types of sentiment:
+  + positive
+  + negative
+  + neutral
+
+** Example Request Body
+#+begin_src json
+{
+  "tweet": "My bike was put on hold...should have known that.... argh total bummer",
+  "sentiment": "negative"
+}
+#+end_src
+** Response Body
+#+begin_src json
+{
+  "tweet": "My bike was put on hold...should have known that.... argh total bummer",
+  "sentiment": "negative",
+  "text representing sentiment": "argh total bummer"
+}
+#+end_src
+
+* Docker Container
+- To create a docker container first clone the repository and download and add
+  these folders inside ~/app/input/~ and ~/app/~
+- [[https://drive.google.com/drive/folders/1m725JZHamVUAs7T-rRu_pwyKLdMkaT9Z?usp=sharing][bert-base-uncased]] inside ~/app/input/~
+- [[https://drive.google.com/drive/folders/1OtqA6XFq0GhZlKRyGUDN7hRudYD98pGB?usp=sharing][models]] folder inside ~/app/~
+
+** Tree structure of directories post addition of these folders
+#+begin_src shell
+├── Dockerfile
+├── README.org
+├── app
+│   ├── __pycache__
+│   │   └── api.cpython-310.pyc
+│   ├── api.py
+│   ├── input
+│   │   ├── bert-base-uncased
+│   │   │   ├── config.json
+│   │   │   ├── pytorch_model.bin
+│   │   │   └── vocab.txt
+│   │   ├── test.csv
+│   │   └── train.csv
+│   ├── models
+│   │   ├── model.bin
+│   │   └── model_cfg.py
+│   └── notebooks
+│       └── tweet-sentiment-bert-and-eda.ipynb
+├── requirements.txt
+└── src
+    ├── __init__.py
+    ├── config.py
+    ├── dataset.py
+    ├── engine.py
+    ├── inference.py
+    ├── model.py
+    ├── train.py
+    └── utils.py
+#+end_src
+
+#+begin_quote
+NOTE: The ~src~ folder contains codes for training and inference. We won't need
+them for our docker env but I have kept them there in case we want to re-train
+our models.
+#+end_quote
+
+
+** Build and Run
+*** Build
+After adding the files and folders in the mentioned directories come to the
+base directory where ~Dockerfile~ is present and run this command to build the
+docker image:
+#+begin_src shell
+docker build -t image-name .
+#+end_src
+
+*** Run
+After successfully building the Docker Image we can run our container using:
+#+begin_src shell
+docker run -p 80:80 image-name
+#+end_src
+
+* FastAPI Swagger URL
+After running the docker visit http://0.0.0.0/docs/ url where we have our =get= ~/~ method which results the
+Health of our API and =post= ~/predict~ method which results the resultant phrase
+which exemplifies the sentiment for the given tweet.
+
+** Request URL
+http://0.0.0.0/predict
+** Curl request
+#+begin_src shell
+curl -X 'POST' \
+  'http://0.0.0.0/predict' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "tweet": "",
+  "sentiment": ""
+}'
+#+end_src
