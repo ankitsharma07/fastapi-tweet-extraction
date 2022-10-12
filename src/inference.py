@@ -139,7 +139,7 @@ def run_inference():
     df_test = pd.read_csv(config.TEST_FILE)
     df_test.loc[:, "selected_text"] = df_test.text.values
 
-
+    # Custom data
     test_tweet = ["Recession hit Veronique Branquinho, she has to quit her company, such a shame!"]
     test_sentiment = ["negative"]
     test_selected_text = test_tweet
